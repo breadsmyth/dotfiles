@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+herbstclient list_monitors | sed 's/[^"]*"\([^"]*\)"[^"]*/\1/'

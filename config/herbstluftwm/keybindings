@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+hc () {
+    herbstclient "$@"
+}
+scripts="$HOME/.bin/scripts"
+
+# keybindings
+hc keyunbind --all
+
+Alt=Mod1
+Win=Mod4
+
+hc keybind $Win-Shift-q quit
+hc keybind $Win-Shift-r reload
+hc keybind $Win-Return spawn alacritty
+hc keybind $Win-d spawn rofi -show drun
+# hc keybind $Win-space spawn sidebar
+
+# basic movement in tiling and floating mode
+# focusing clients
+hc keybind $Win-h     focus left
+hc keybind $Win-j     focus down
+hc keybind $Win-k     focus up
+hc keybind $Win-l     focus right
+
+# moving clients in tiling and floating mode
+hc keybind $Win-Shift-h     shift left
+hc keybind $Win-Shift-j     shift down
+hc keybind $Win-Shift-k     shift up
+hc keybind $Win-Shift-l     shift right
+
+# splitting frames
+# create an empty frame at the specified direction
+#hc keybind $Win-v       split   bottom  0.5
+#hc keybind $Win-b       split   right   0.5
+hc keybind $Win-n split auto
+
+# resizing frames and floating clients
+resizestep=0.02
+hc keybind $Win-Ctrl-h       resize left +$resizestep
+hc keybind $Win-Ctrl-j       resize down +$resizestep
+hc keybind $Win-Ctrl-k       resize up +$resizestep
+hc keybind $Win-Ctrl-l       resize right +$resizestep
+
+# tags
+tag_names=( {1..5} )
+tag_keys=( {1..5} )
+
+hc rename default "${tag_names[0]}" || true
+for i in "${!tag_names[@]}" ; do
+    hc add "${tag_names[$i]}"
+    key="${tag_keys[$i]}"
+    if [ -n "$key" ] ; then
+        hc keybind "$Win-$key" use_index "$i"
+        hc keybind "$Win-Shift-$key" chain , move_index "$i" , use_index "$i"
+    fi
+done
+
+# layouting
+hc keybind $Win-q close
+hc keybind $Win-w close_and_remove
+hc keybind $Win-t floating toggle
+hc keybind $Win-f fullscreen toggle
+hc keybind $Win-Shift-f set_attr clients.focus.floating toggle
+hc keybind $Win-Shift-d set_attr clients.focus.decorated toggle
+hc keybind $Win-Shift-m set_attr clients.focus.minimized true
+hc keybind $Win-Control-m jumpto last-minimized
+hc keybind $Win-p pseudotile toggle
+
+# mouse
+hc mouseunbind --all
+hc mousebind $Win-Button1 move
+hc mousebind $Win-Button2 zoom
+hc mousebind $Win-Button3 resize
+
+# focus
+hc keybind $Alt-Tab         cycle_all +1
+hc keybind $Alt-Shift-Tab   cycle_all -1
+
+# media keys
+hc keybind XF86AudioRaiseVolume spawn $scripts/volume up
+hc keybind XF86AudioLowerVolume spawn $scripts/volume down
+hc keybind XF86AudioMute spawn $scripts/volume mute
+hc keybind XF86MonBrightnessUp spawn $scripts/brightness up
+hc keybind XF86MonBrightnessDown spawn $scripts/brightness down
+hc keybind Print spawn $scripts/screenshot all
+hc keybind $Alt-Print spawn $scripts/screenshot selection

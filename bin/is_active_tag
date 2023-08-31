@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+active_tag=$(get_active_tag)
+[ $active_tag -eq $1 ] && echo true || echo f
+

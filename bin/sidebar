@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+status_file=~/.config/eww/sidebar_status
+
+if [ `cat $status_file` -eq 0 ]; then
+   eww open sidebar
+   echo 1 > $status_file
+else
+   eww close sidebar
+   echo 0 > $status_file
+fi

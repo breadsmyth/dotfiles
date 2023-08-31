@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+dunstify "Hello world!" -b "This is a notification. I love it"

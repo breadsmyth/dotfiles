@@ -1,0 +1,129 @@
+(defpoll name :interval "24h" `echo "<span weight='heavy'>$(whoami)</span>@$(cat /etc/hostname)"`)
+(defpoll time :interval "1s" `clock`)
+(defpoll date :interval "1s" `today`)
+
+(defpoll is_active_1 :interval "1s" `is_active_tag 1`)
+(defpoll is_active_2 :interval "1s" `is_active_tag 2`)
+(defpoll is_active_3 :interval "1s" `is_active_tag 3`)
+(defpoll is_active_4 :interval "1s" `is_active_tag 4`)
+(defpoll is_active_5 :interval "1s" `is_active_tag 5`)
+
+(defpoll has_clients_1 :interval "1s" `tag_has_clients 1`)
+(defpoll has_clients_2 :interval "1s" `tag_has_clients 2`)
+(defpoll has_clients_3 :interval "1s" `tag_has_clients 3`)
+(defpoll has_clients_4 :interval "1s" `tag_has_clients 4`)
+(defpoll has_clients_5 :interval "1s" `tag_has_clients 5`)
+
+(defwidget workspace-widget []
+   (box :class "workspaces" :orientation "h"
+      (button
+         :onclick "herbstclient use_index 0"
+         :class {strlength(is_active_1) > 1 ? "active" : "inactive"}
+         {strlength(is_active_1) > 1 || strlength(has_clients_1) > 1 ? "" : ""})
+      (button
+         :onclick "herbstclient use_index 1"
+         :class {strlength(is_active_2) > 1 ? "active" : "inactive"}
+         {strlength(is_active_2) > 1 || strlength(has_clients_2) > 1 ? "" : ""})
+      (button
+         :onclick "herbstclient use_index 2"
+         :class {strlength(is_active_3) > 1 ? "active" : "inactive"}
+         {strlength(is_active_3) > 1 || strlength(has_clients_3) > 4 ? "" : ""})
+      (button
+         :onclick "herbstclient use_index 3"
+         :class {strlength(is_active_4) > 1 ? "active" : "inactive"}
+         {strlength(is_active_4) > 1 || strlength(has_clients_4) > 1 ? "" : ""})
+      (button
+         :onclick "herbstclient use_index 4"
+         :class {strlength(is_active_5) > 1 ? "active" : "inactive"}
+         {strlength(is_active_5) > 1 || strlength(has_clients_5) > 1 ? "" : ""})
+   )
+)
+
+(defwidget name [] (label :class "name" :markup {name}))
+
+(defwidget timeclock []
+   (box :class "timeclock" :orientation "v" :space-evenly false
+      (box :class "clock" {time})
+      (box :class "date" {date})
+   )
+)
+
+(defwidget launchers []
+   (box :class "launcher-container-1" :orientation "h"
+      (centerbox :class "launcher-container-2" :orientation "v"
+         (button :onclick "alacritty --working-directory ~ & ; sidebar" "")
+         (button :onclick "dunstify Error 'VSCode not done yet'; sidebar" "﬏")
+         (button :onclick "multimc & ; sidebar" "")
+      )
+
+      (centerbox :class "launcher-container-2" :orientation "v"
+         (button :onclick "brave & ; sidebar" "爵")
+         (button :onclick "dunstify Error 'Spotify not done yet'; sidebar" "")
+         (button :onclick "dunstify Error 'Art application not done yet'; sidebar" "")
+      )
+   )
+)
+
+(defwidget metric [label value classname]
+  (box :orientation "v"
+       :class "metric"
+       :space-evenly false
+    (scale :min 0
+           :max 101
+           :orientation "v"
+           :class classname
+           :active true
+           :value value
+           :flipped true)
+    (box :class "label" label)
+           ))
+
+(defwidget meters []
+   (box :class "meters" :orientation "h"
+      (metric :label "柳" :value {EWW_CPU.avg} :classname "cpu")
+      (metric :label "" :value {EWW_RAM.used_mem_perc} :classname "ram")
+      (metric :label "﫭" :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)} :classname "disk")
+      (metric :label "" :value {EWW_BATTERY["BAT1"].capacity} :classname "bat")
+   )
+)
+
+(defwidget sys_buttons []
+   (box :class "sys_buttons" :orientation "h"
+      (button :onclick "dunstify Hello! 'Welcome to this notification'" "")
+   )
+)
+
+(defwidget sidebar-widget []
+   (box
+      :class "sidebar"
+      :orientation "v"
+      :space-evenly false
+      (name)
+      (timeclock)
+      (launchers)
+      (meters)
+      (sys_buttons)
+   )
+)
+
+(defwindow workspaces
+   :monitor 0
+   :windowtype "dock"
+   :geometry (geometry
+      :x "-50px"
+      :y "-20px"
+      :width "350px"
+      :height "60px"
+      :anchor "top right")
+  (workspace-widget))
+
+(defwindow sidebar
+   :monitor 0
+   :windowtype "dock"
+   :geometry (geometry
+      :x "0%"
+      :y "0%"
+      :width "300px"
+      :height "100%"
+      :anchor "left center")
+  (sidebar-widget))

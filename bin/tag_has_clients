@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+[ $(herbstclient list_clients --tag=$1 | wc -l) -gt 0 ] && echo true || echo f

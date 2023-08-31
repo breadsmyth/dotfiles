@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+max_length=${1:-40}
+data="$(curl https://api.quotable.io/random?maxLength=$max_length 2> /dev/null)"
+output=$(echo $data | grep -o '"content":"[^"]*"' | sed 's/"content":"\([^"]*\)"/\1/')
+output+=$'\n- '$(echo $data | grep -o '"author":"[^"]*"' | sed 's/"author":"\([^"]*\)"/\1/')
+echo "$output"

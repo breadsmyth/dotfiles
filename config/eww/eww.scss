@@ -1,0 +1,85 @@
+* {
+   all: unset
+}
+
+@import "nord.scss";
+
+.workspaces > button {
+   font-size: 76px;
+   padding: 0px;
+   color: $nord3;
+
+   &.active {
+      color: $nord4;
+   }
+}
+
+.sidebar {
+   background-color: $nord6;
+   color: $nord3;
+   font-family: Iosevka;
+   font-size: 36px;
+
+   & > * {
+      padding: 20px;
+   }
+}
+
+.clock {
+   font-family: "Hack";
+   font-size: 100px;
+   font-weight: bold;
+   color: $nord1;
+}
+
+.date {
+   font-size: 42px;
+}
+
+.launcher-container-1 {
+   padding: 0px;
+}
+
+.launcher-container-2 button {
+   background-color: $nord4;
+   border-radius: 20px;
+   margin: 10px;
+   padding: 0px;
+   font-size: 100px;
+
+   &:hover {
+      background-color: $nord3;
+      color: $nord8;
+   }
+}
+
+.metric scale trough {
+  all: unset;
+  background-color: $nord3;
+  border-radius: 50px;
+  min-height: 200px;
+  min-width: 16px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.metric .label {
+   font-size: 60px;
+}
+.metric scale trough highlight { border-radius: 10px; }
+.metric scale.cpu trough highlight { background-color: $nord8; }
+.metric scale.ram trough highlight { background-color: $nord15; }
+.metric scale.disk trough highlight { background-color: $nord12; }
+.metric scale.bat trough highlight { background-color: $nord14; }
+
+.sys_buttons button {
+   background-color: $nord4;
+   border-radius: 30px;
+   margin: 10px;
+   padding: 0px;
+   font-size: 70px;
+
+   &:hover {
+      background-color: $nord3;
+      color: $nord5;
+   }
+}
